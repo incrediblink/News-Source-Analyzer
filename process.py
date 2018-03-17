@@ -56,26 +56,30 @@ def parseArticle():
       quoteCount = 0
       for i in range(0, len(article)):
         char = article[i]
-        if (char == " " or char == "\n") and sentence == "":
+        if char == "'" and article[i + 1] == "'":
+          quoteCount += 1
+        if char == " " and sentence == "":
           pass
-        elif quoteCount % 2 > 0 or char != ".":
+        elif char == "\n":
+          if sentence != "":
+            sentences.append(sentence)
+            sentence = ""
+        elif char != "." or quoteCount % 2 > 0:
           sentence += char
         elif char == ".":
           word = ""
           k = i - 1
-          while article[k] != " ":
+          while article[k] != " " and article[k] != "\n":
             word = article[k] + word
             k += -1
           if len(word) == 1 or word in { "Mr", "Mrs", "Prof", "Ms", "Sen",
             "Dr", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug",
-            "Sept", "Oct", "Nov", "Dec" }:
+            "Sept", "Oct", "Nov", "Dec", "Ph", "Univ", "St", "Jr" }:
             sentence += char
-            print(word)
-            print(char)
           elif (len(article) <= i + 1 or
             article[i + 1] == " " or
             article[i + 1] == "\n"):
-            if len(article) <= i + 2 or article[i + 2].lower() != article[i + 2]:
+            if len(article) <= i + 2 or article[i + 2] == "'" or article[i + 2].lower() != article[i + 2]:
               sentence += char
               sentences.append(sentence)
               sentence = ""
